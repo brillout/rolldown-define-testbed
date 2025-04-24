@@ -3,6 +3,9 @@ import { rolldown } from 'rolldown';
 const bundle = await rolldown({
   // input options
   input: 'input.js',
+  define: {
+    'someObj.__DEV__': 'false', // Replace property access
+  },
 });
 
 // generate bundles in memory with different output options
