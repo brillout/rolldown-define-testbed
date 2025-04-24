@@ -1,7 +1,7 @@
 import * as esbuild from 'esbuild';
 import assert from 'assert';
 
-// Step 1: Input code (string)
+// Step 1: Define input code
 const inputCode = `
   if (__DEV__) {
     console.log('Dev mode');
@@ -10,19 +10,18 @@ const inputCode = `
   }
 `;
 
-// Step 2: Transform with esbuild
+// Step 2: Transform using esbuild
 const result = await esbuild.transform(inputCode, {
   loader: 'ts',
   define: {
     __DEV__: 'false',
   },
   minify: true,
-  bundle: false,
 });
 
-// Step 3: Inspect output
+// Step 3: Inspect & assert
 const output = result.code;
-console.log('Bundled Output:\n' + output);
+console.log('Transformed Output:\n' + output);
 
 // Step 4: Assertions
 assert(!output.includes('__DEV__'), 'Global should be replaced');
