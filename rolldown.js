@@ -11,4 +11,4 @@ const res = await bundle.generate({
   format: 'esm',
 });
 // console.log('res', JSON.stringify(res, null, 2))
-console.log('res', res.output[0].code)
+console.log(res.output[0].code)
