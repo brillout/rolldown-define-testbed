@@ -2,7 +2,7 @@ import { rolldown } from 'rolldown';
 
 const bundle = await rolldown({
   // input options
-  input: 'src/main.js',
+  input: 'input.js',
 });
 
 // generate bundles in memory with different output options
