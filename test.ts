@@ -3,10 +3,12 @@ import assert from 'assert';
 
 // Step 1: Define input code
 const inputCode = `
-  if (__DEV__) {
-    console.log('Dev mode');
-  } else {
-    console.log('Prod mode');
+  function test(someObj) {
+    if (someObj.__DEV__) {
+      console.log('Dev mode');
+    } else {
+      console.log('Prod mode');
+    }
   }
 `;
 
@@ -14,7 +16,7 @@ const inputCode = `
 const result = await esbuild.transform(inputCode, {
   loader: 'ts',
   define: {
-    __DEV__: 'false',
+    'someObj.__DEV__': 'false',
   },
   minify: true,
 });
