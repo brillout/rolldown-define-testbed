@@ -1,8 +1,6 @@
-// Test file for esbuild define functionality
 const fs = require('fs');
 const esbuild = require('esbuild');
 
-// Original source code with variables to replace
 const sourceCode = `
 // Variables that will be replaced by esbuild define
 const APP_VERSION = '0.0.0';
@@ -21,30 +19,26 @@ function initApp() {
 initApp();
 `;
 
-// Write the source to a temporary file
 fs.writeFileSync('temp.js', sourceCode);
 
-// Build with esbuild using define to replace variables
 esbuild.build({
   entryPoints: ['temp.js'],
   bundle: true,
-  outfile: 'out.js',
+  write: false,  // Don't write to file, we'll handle output
   define: {
-    'APP_VERSION': '"1.2.3"',          // Replace with string "1.2.3"
-    'DEBUG_MODE': 'false',              // Replace with boolean false
-    'API_BASE_URL': '"https://api.example.com"' // Replace with production URL
+    'APP_VERSION': JSON.stringify('1.2.3'),  // Proper string replacement
+    'DEBUG_MODE': 'false',                  // Boolean replacement
+    'API_BASE_URL': JSON.stringify('https://api.example.com')
   },
-}).then(() => {
-  console.log('Build complete. Output in out.js');
+}).then((result) => {
+  console.log('Build complete.');
   console.log('Original code:');
   console.log(sourceCode);
   
-  // Show the transformed output
-  const output = fs.readFileSync('out.js', 'utf-8');
+  const output = result.outputFiles[0].text;
   console.log('\nTransformed code:');
   console.log(output);
   
-  // Clean up
   fs.unlinkSync('temp.js');
 }).catch((err) => {
   console.error('Build failed:', err);
