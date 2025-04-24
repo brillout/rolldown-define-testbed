@@ -1,13 +1,17 @@
 const esbuild = require('esbuild');
 
-// Test case showing both patterns
 const source = `
-// 1. Free variable replacement (identifier)
+// 1. For direct replacement of free variables (must be undeclared)
 console.log('BUILD_ENV:', BUILD_ENV);
 
-// 2. Literal value replacement
-const APP_VERSION = '0.0.0';  // Will match literal '0.0.0'
-const DEBUG = true;          // Will match literal 'true'
+// 2. For replacing constant values - use object properties
+const config = {
+  version: APP_VERSION,  // Will be replaced
+  debug: DEBUG_MODE     // Will be replaced
+};
+
+console.log('Version:', config.version);
+console.log('Debug mode:', config.debug);
 `;
 
 esbuild.build({
@@ -15,13 +19,16 @@ esbuild.build({
   bundle: true,
   write: false,
   define: {
-    // 1. Free variable pattern (identifier)
-    'BUILD_ENV': JSON.stringify('production'),
+    // 1. Replace free variables (no declarations)
+    'BUILD_ENV': '"production"',
     
-    // 2. Literal value pattern (exact match)
-    "'0.0.0'": JSON.stringify('1.2.3'),  // Note the extra quotes
-    'true': 'false'
-  },
+    // 2. Replace property values
+    'APP_VERSION': '"1.2.3"',
+    'DEBUG_MODE': 'false'
+  }
 }).then(result => {
+  console.log('Transformed code:\n');
   console.log(result.outputFiles[0].text);
+}).catch(err => {
+  console.error('Build failed:', err);
 });
