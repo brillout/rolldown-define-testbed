@@ -2,7 +2,7 @@ import * as esbuild from 'esbuild';
 import fs from 'fs';
 import assert from 'assert';
 
-// Step 1: Write a sample input file
+// Step 1: Write input
 const inputPath = './input.js';
 fs.writeFileSync(inputPath, `
   if (__DEV__) {
@@ -12,21 +12,22 @@ fs.writeFileSync(inputPath, `
   }
 `);
 
-// Step 2: Bundle using esbuild with define
+// Step 2: Build with define + minify
 await esbuild.build({
   entryPoints: [inputPath],
   bundle: true,
   define: {
-    __DEV__: 'false', // Replace global
+    __DEV__: 'false',
   },
+  minify: true,
   outfile: './out.js',
   write: true,
 });
 
-// Step 3: Capture the output
+// Step 3: Check output
 const output = fs.readFileSync('./out.js', 'utf8');
 
-// Step 4: Assert replacement happened
+// Step 4: Assert
 assert(!output.includes('__DEV__'), 'Global should be replaced');
 assert(output.includes('"Prod mode"'), 'Should contain prod log');
 assert(!output.includes('"Dev mode"'), 'Should not contain dev log');
