@@ -2,18 +2,18 @@ const fs = require('fs');
 const esbuild = require('esbuild');
 
 const sourceCode = `
-// Variables that will be replaced by esbuild define
-const APP_VERSION = '0.0.0';
-const DEBUG_MODE = true;
-const API_BASE_URL = 'http://localhost:3000';
+// This pattern ensures esbuild will replace these constants
+process.env.APP_VERSION;
+process.env.DEBUG_MODE;
+process.env.API_BASE_URL;
 
 // Function using these variables
 function initApp() {
-  console.log('App version:', APP_VERSION);
-  if (DEBUG_MODE) {
+  console.log('App version:', process.env.APP_VERSION);
+  if (process.env.DEBUG_MODE === 'true') {
     console.log('Debug mode is enabled');
   }
-  console.log('API base URL:', API_BASE_URL);
+  console.log('API base URL:', process.env.API_BASE_URL);
 }
 
 initApp();
@@ -24,11 +24,11 @@ fs.writeFileSync('temp.js', sourceCode);
 esbuild.build({
   entryPoints: ['temp.js'],
   bundle: true,
-  write: false,  // Don't write to file, we'll handle output
+  write: false,
   define: {
-    'APP_VERSION': JSON.stringify('1.2.3'),  // Proper string replacement
-    'DEBUG_MODE': 'false',                  // Boolean replacement
-    'API_BASE_URL': JSON.stringify('https://api.example.com')
+    'process.env.APP_VERSION': JSON.stringify('1.2.3'),
+    'process.env.DEBUG_MODE': JSON.stringify('false'),
+    'process.env.API_BASE_URL': JSON.stringify('https://api.example.com')
   },
 }).then((result) => {
   console.log('Build complete.');
