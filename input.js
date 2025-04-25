@@ -11,5 +11,8 @@ console.log(insideString)
 
 /*! Inside comment: someObj.__DEV__ */
 
-// Nested
+// Nested 1
 console.log(globalContext.someObj.__DEV__)
+
+// Nested 2
+console.log(someObj.__DEV__.nested)
