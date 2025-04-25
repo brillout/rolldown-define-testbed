@@ -5,10 +5,10 @@ const bundle = await rolldown({
   input: 'input.js',
   plugins: [
     replacePlugin({
-      values: {
-        'someObj.__DEV__': 'false',
-      },
+      'someObj.__DEV__': 'false',
+      /* Doesn't seem supported yet
       delimiters: ['(?<!\\.)\\b', '\\b(?!\\.)'],
+      //*/
     })
   ],
 });
