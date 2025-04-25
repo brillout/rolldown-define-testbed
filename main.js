@@ -5,7 +5,11 @@ const bundle = await rollup({
   input: 'input.js',
   plugins: [
     replace({
-      'someObj.__DEV__': 'false',
+      values: {
+        'someObj.__DEV__': 'false',
+      },
+      delimiters: ['(?<!\\.)\\b', '\\b(?!\\.)'],
+      preventAssignment: true
     })
   ],
 });
