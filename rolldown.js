@@ -1,10 +1,13 @@
 import { rolldown } from 'rolldown';
+import { replacePlugin } from 'rolldown/experimental';
 
 const bundle = await rolldown({
   input: 'input.js',
-  define: {
-    'someObj.__DEV__': 'false',
-  },
+  plugins: [
+    replacePlugin({
+      'someObj.__DEV__': 'false'
+    })
+  ],
 });
 
 const res = await bundle.generate({
